@@ -25,11 +25,6 @@ namespace OpenLib.VsWizards
         private const string WizardDataKeySolutionItems = "solutionItems";
 
         /// <summary>
-        /// Defines the file extension for a Visual Studio template package.
-        /// </summary>
-        private const string TemplatePackageExt = ".zip";
-
-        /// <summary>
         /// Defines the physical Visual Studio solution root.
         /// </summary>
         private const string PhysicalSolutionRoot = "Root";

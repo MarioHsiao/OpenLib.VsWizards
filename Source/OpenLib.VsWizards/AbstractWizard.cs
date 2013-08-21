@@ -35,6 +35,11 @@ namespace OpenLib.VsWizards
         protected const string VarSafeProjectName = "$safeprojectname$";
 
         /// <summary>
+        /// Defines the file extension for a Visual Studio template package.
+        /// </summary>
+        protected const string TemplatePackageExt = ".zip";
+
+        /// <summary>
         /// Defines the namespace used for wizard template data XML.
         /// </summary>
         protected readonly XNamespace Ns = "http://schemas.microsoft.com/developer/vstemplate/2005";
