@@ -14,6 +14,10 @@ namespace OpenLib.VsWizards
     /// </summary>
     public abstract class AbstractWizard
     {
+        //---------------------------------------------------------------------
+        // Fields
+        //---------------------------------------------------------------------
+
         /// <summary>
         /// Defines the template variable name for the solution directory.
         /// </summary>
@@ -44,6 +48,10 @@ namespace OpenLib.VsWizards
         /// </summary>
         protected readonly XNamespace Ns = "http://schemas.microsoft.com/developer/vstemplate/2005";
 
+        //---------------------------------------------------------------------
+        // Properties
+        //---------------------------------------------------------------------
+
         /// <summary>
         /// Gets a reference to the Visual Studio utilities.
         /// </summary>
@@ -60,7 +68,7 @@ namespace OpenLib.VsWizards
         public Dictionary<string, string> WizardData { get; internal set; }
 
         /// <summary>
-        /// Gets or sets the path to the Visual Studio project template.
+        /// Gets the path to the Visual Studio project template.
         /// </summary>
         public string TemplatePath { get; internal set; }
 
@@ -80,13 +88,21 @@ namespace OpenLib.VsWizards
         /// </summary>
         public bool IsValid { get; internal set; }
 
+        //---------------------------------------------------------------------
+        // Constructors
+        //---------------------------------------------------------------------
+
         /// <summary>
         /// Creates a new instance of the <c>AbstractWizard</c> class.
         /// </summary>
         protected AbstractWizard()
         {
-            this.VsUtils = new VsUtils(new Vs2012CsInfo());
+            this.VsUtils = new VsUtils(new Vs2013CsInfo());
         }
+
+        //---------------------------------------------------------------------
+        // Abstract Methods
+        //---------------------------------------------------------------------
 
         /// <summary>
         /// Defines an abstract method for validating creation of a Visual
@@ -96,24 +112,28 @@ namespace OpenLib.VsWizards
         /// <returns>A value indicating if the project template is valid.</returns>
         protected abstract bool Validate();
 
+        //---------------------------------------------------------------------
+        // Other Methods
+        //---------------------------------------------------------------------
+
         /// <summary>
         /// Defines an abstract base method that sets common properties when a
         /// Wizard implementation's RunStarted method is executed.
         /// </summary>
-        /// <param name="automationObject">A reference to the automation object used by the Visual Studio project template wizard.</param>
-        /// <param name="replacementsDictionary">A reference to a dictionary of template variables that can be modified to provide customization.</param>
-        /// <param name="runKind">Defines the type of the template the template wizard is creating.</param>
-        /// <param name="customParams">An array of custom parameters passed to the template wizard.</param>
-        protected void RunStarted
-            (
-                object automationObject,
-                Dictionary<string, string> replacementsDictionary,
-                WizardRunKind runKind,
-                object[] customParams
-            )
+        /// <param name="automationObject">A reference to the automation object
+        /// used by the Visual Studio project template wizard.</param>
+        /// <param name="replacementsDictionary">A reference to a dictionary of
+        /// template variables that can be modified to provide customization.</param>
+        /// <param name="runKind">Defines the type of the template the template
+        /// wizard is creating.</param>
+        /// <param name="customParams">An array of custom parameters passed to
+        /// the template wizard.</param>
+        protected void RunStarted(object automationObject,
+                                  Dictionary<string, string> replacementsDictionary,
+                                  WizardRunKind runKind,
+                                  object[] customParams)
         {
             this.SolutionRoot = new DirectoryInfo(replacementsDictionary[VarSolutionDir]);
-
             this.WizardData = this.GetWizardData(replacementsDictionary);
 
             this.TemplatePath = customParams[0].ToString();
@@ -127,12 +147,10 @@ namespace OpenLib.VsWizards
         /// Gets a dictionary containing data for the template wizard using
         /// data parsed from the specified replacements dictionary.
         /// </summary>
-        /// <param name="replacementsDictionary">A reference to a dictionary of template variables that can be modified to provide customization.</param>
+        /// <param name="replacementsDictionary">A reference to a dictionary of
+        /// template variables that can be modified to provide customization.</param>
         /// <returns>A dictionary containing data for the template wizard.</returns>
-        protected Dictionary<string, string> GetWizardData
-            (
-                Dictionary<string, string> replacementsDictionary
-            )
+        protected Dictionary<string, string> GetWizardData(Dictionary<string, string> replacementsDictionary)
         {
             Dictionary<string, string> wizardData = null;
 

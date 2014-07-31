@@ -19,6 +19,10 @@ namespace OpenLib.VsWizards
     /// </remarks>
     public class SolutionItemsWizard : AbstractWizard, IWizard
     {
+        //---------------------------------------------------------------------
+        // Fields
+        //---------------------------------------------------------------------
+
         /// <summary>
         /// Defines the wizard data dictionary key for the solution items.
         /// </summary>
@@ -29,12 +33,20 @@ namespace OpenLib.VsWizards
         /// </summary>
         private const string PhysicalSolutionRoot = "Root";
 
+        //---------------------------------------------------------------------
+        // Constructors
+        //---------------------------------------------------------------------
+
         /// <summary>
         /// Creates a new instance of the <c>SolutionItemsWizard</c> class.
         /// </summary>
         public SolutionItemsWizard() : base()
         {
         }
+
+        //---------------------------------------------------------------------
+        // Abstract Implementation Methods
+        //---------------------------------------------------------------------
 
         /// <summary>
         /// Validates the creation of a Visual Studio project using a project
@@ -46,11 +58,16 @@ namespace OpenLib.VsWizards
             return true;
         }
 
+        //---------------------------------------------------------------------
+        // Other Methods
+        //---------------------------------------------------------------------
+
         /// <summary>
         /// Executes before each file that is being added to a Visual Studio
         /// project is opened.
         /// </summary>
-        /// <param name="projectItem">A reference to the project item being added to the Visual Studio project.</param>
+        /// <param name="projectItem">A reference to the project item being added
+        /// to the Visual Studio project.</param>
         public void BeforeOpeningFile(ProjectItem projectItem)
         {
         }
@@ -58,7 +75,8 @@ namespace OpenLib.VsWizards
         /// <summary>
         /// Executes when a Visual Studio project is being created.
         /// </summary>
-        /// <param name="project">A reference to the Visual Studio project being created.</param>
+        /// <param name="project">A reference to the Visual Studio project
+        /// being created.</param>
         public void ProjectFinishedGenerating(Project project)
         {
         }
@@ -66,7 +84,8 @@ namespace OpenLib.VsWizards
         /// <summary>
         /// Executes when a Visual Studio project item is created.
         /// </summary>
-        /// <param name="projectItem">A reference to the project item created in the Visual Studio project.</param>
+        /// <param name="projectItem">A reference to the project item created
+        /// in the Visual Studio project.</param>
         public void ProjectItemFinishedGenerating(ProjectItem projectItem)
         {
         }
@@ -86,7 +105,8 @@ namespace OpenLib.VsWizards
         /// Gets a value indicating if a project item should be added to a
         /// Visual Studio project.
         /// </summary>
-        /// <param name="filePath">The absolute path to the project item being added.</param>
+        /// <param name="filePath">The absolute path to the project item being
+        /// added.</param>
         /// <returns>A value indicating if a project item should be added.</returns>
         public bool ShouldAddProjectItem(string filePath)
         {
@@ -96,17 +116,18 @@ namespace OpenLib.VsWizards
         /// <summary>
         /// Executes when the creation of a Visual Studio project is started.
         /// </summary>
-        /// <param name="automationObject">A reference to the automation object used by the Visual Studio project template wizard.</param>
-        /// <param name="replacementsDictionary">A reference to a dictionary of template variables that can be modified to provide customization.</param>
-        /// <param name="runKind">Defines the type of the template the template wizard is creating.</param>
-        /// <param name="customParams">An array of custom parameters passed to the template wizard.</param>
-        public new void RunStarted
-            (
-                object automationObject,
-                Dictionary<string, string> replacementsDictionary,
-                WizardRunKind runKind,
-                object[] customParams
-            )
+        /// <param name="automationObject">A reference to the automation object
+        /// used by the Visual Studio project template wizard.</param>
+        /// <param name="replacementsDictionary">A reference to a dictionary of
+        /// template variables that can be modified to provide customization.</param>
+        /// <param name="runKind">Defines the type of the template the template
+        /// wizard is creating.</param>
+        /// <param name="customParams">An array of custom parameters passed to
+        /// the template wizard.</param>
+        public new void RunStarted(object automationObject,
+                                   Dictionary<string, string> replacementsDictionary,
+                                   WizardRunKind runKind,
+                                   object[] customParams)
         {
             base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
 
@@ -118,8 +139,10 @@ namespace OpenLib.VsWizards
         /// Gets a list of all solution items to be added to a Visual Studio
         /// solution.
         /// </summary>
-        /// <param name="wizardData">A dictionary containing data for the template wizard.</param>
-        /// <returns>A list of all solution items to be added to a Visual Studio solution.</returns>
+        /// <param name="wizardData">A dictionary containing data for the
+        /// template wizard.</param>
+        /// <returns>A list of all solution items to be added to a Visual
+        /// Studio solution.</returns>
         /// <remarks>
         /// Each list item is stored as a Tuple:
         /// Item1 = Physical folder
@@ -129,7 +152,6 @@ namespace OpenLib.VsWizards
         private List<Tuple<string, string, string>> GetSolutionItems(Dictionary<string, string> wizardData)
         {
             List<Tuple<string, string, string>> solutionItems = null;
-
             string data = wizardData[WizardDataKeySolutionItems];
 
             if (!string.IsNullOrWhiteSpace(data))
@@ -161,15 +183,15 @@ namespace OpenLib.VsWizards
         /// specified solution item metadata and creates the files in their
         /// appropriate physical folders on the file system.
         /// </summary>
-        /// <param name="solutionRoot">Directory information for the Visual Studio solution root.</param>
-        /// <param name="templatePath">The path to the Visual Studio project template.</param>
-        /// <param name="solutionItems">A list of metadata for creation of the solution items.</param>
-        private void AddSolutionItems
-            (
-                DirectoryInfo solutionRoot,
-                string templatePath,
-                List<Tuple<string, string, string>> solutionItems
-            )
+        /// <param name="solutionRoot">Directory information for the Visual
+        /// Studio solution root.</param>
+        /// <param name="templatePath">The path to the Visual Studio project
+        /// template.</param>
+        /// <param name="solutionItems">A list of metadata for creation of
+        /// the solution items.</param>
+        private void AddSolutionItems(DirectoryInfo solutionRoot,
+                                      string templatePath,
+                                      List<Tuple<string, string, string>> solutionItems)
         {
             if (solutionItems != null && solutionItems.Count > 0)
             {
@@ -199,7 +221,6 @@ namespace OpenLib.VsWizards
                                     destinationDir.Create();
 
                                 sourcePath.CopyTo(destinationPath.FullName, true);
-
                                 solutionFolder.ProjectItems.AddFromFile(destinationPath.FullName);
                             }
                         }
@@ -210,12 +231,12 @@ namespace OpenLib.VsWizards
         /// <summary>
         /// Gets a safe path by removing invalid path characters.
         /// </summary>
-        /// <param name="path">The path in which to cleanse of invalid characters.</param>
+        /// <param name="path">The path in which to cleanse of invalid
+        /// characters.</param>
         /// <returns>A safe path by removing invalid path characters.</returns>
         private string GetSafePath(string path)
         {
-            return path.Replace(" ", "")
-                        .Replace(".", "");
+            return path.Replace(" ", "").Replace(".", "");
         }
     }
 }
