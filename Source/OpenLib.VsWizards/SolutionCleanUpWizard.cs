@@ -43,7 +43,7 @@ namespace OpenLib.VsWizards
         }
 
         //---------------------------------------------------------------------
-        // Other Methods
+        // IWizard Implementation
         //---------------------------------------------------------------------
 
         /// <summary>
@@ -112,6 +112,10 @@ namespace OpenLib.VsWizards
         {
             base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
         }
+
+        //---------------------------------------------------------------------
+        // Other Methods
+        //---------------------------------------------------------------------
 
         /// <summary>
         /// Cleans up Visual Studio solution and project directories.

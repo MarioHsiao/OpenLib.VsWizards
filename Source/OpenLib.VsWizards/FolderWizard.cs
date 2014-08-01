@@ -62,7 +62,7 @@ namespace OpenLib.VsWizards
         }
 
         //---------------------------------------------------------------------
-        // Other Methods
+        // IWizard Implementation
         //---------------------------------------------------------------------
 
         /// <summary>
@@ -146,6 +146,10 @@ namespace OpenLib.VsWizards
                     this.WizardData[WizardDataKeyTemplate]);
             }
         }
+
+        //---------------------------------------------------------------------
+        // Other Methods
+        //---------------------------------------------------------------------
 
         /// <summary>
         /// Adds a Visual Studio project to a solution folder using the

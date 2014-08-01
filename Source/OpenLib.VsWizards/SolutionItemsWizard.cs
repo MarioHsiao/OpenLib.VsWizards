@@ -59,7 +59,7 @@ namespace OpenLib.VsWizards
         }
 
         //---------------------------------------------------------------------
-        // Other Methods
+        // IWizard Implementation
         //---------------------------------------------------------------------
 
         /// <summary>
@@ -134,6 +134,10 @@ namespace OpenLib.VsWizards
             this.TemplatePath = Path.GetDirectoryName(
                 Path.GetDirectoryName(this.TemplatePath));
         }
+
+        //---------------------------------------------------------------------
+        // Other Methods
+        //---------------------------------------------------------------------
 
         /// <summary>
         /// Gets a list of all solution items to be added to a Visual Studio
