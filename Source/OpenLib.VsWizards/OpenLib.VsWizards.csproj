@@ -114,7 +114,6 @@
     <Compile Include="AbstractWizard.cs" />
     <Compile Include="FolderWizard.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SolutionCleanUpWizard.cs" />
     <Compile Include="SolutionItemsWizard.cs" />
   </ItemGroup>
   <ItemGroup>

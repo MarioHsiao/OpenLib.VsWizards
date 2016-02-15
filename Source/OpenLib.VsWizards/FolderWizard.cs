@@ -1,10 +1,8 @@
 ﻿using EnvDTE;
 using EnvDTE80;
 using Microsoft.VisualStudio.TemplateWizard;
-using OpenLib.Extensions;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace OpenLib.VsWizards
 {
@@ -33,6 +31,12 @@ namespace OpenLib.VsWizards
         /// Defines the wizard data dictionary key for the solution folder.
         /// </summary>
         private const string WizardDataKeySolutionFolder = "solutionFolder";
+
+        /// <summary>
+        /// Defines the wizard data dictionary key for the custom project
+        /// directory.
+        /// </summary>
+        private const string WizardDataKeyCustomProjectDir = "customProjectDir";
 
         //---------------------------------------------------------------------
         // Constructors
@@ -100,12 +104,12 @@ namespace OpenLib.VsWizards
         {
             if (this.IsValid)
             {
-                this.AddProject(
+                this.MoveProject(
                     this.SolutionRoot,
                     this.WizardData,
                     this.TemplatePath,
                     this.DefaultDestinationPath,
-                    this.NameSpace);
+                    this.ProjectName);
             }
         }
 
@@ -137,7 +141,10 @@ namespace OpenLib.VsWizards
                                    WizardRunKind runKind,
                                    object[] customParams)
         {
-            base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
+            base.RunStarted(automationObject,
+                            replacementsDictionary,
+                            runKind,
+                            customParams);
 
             if (this.IsValid)
             {
@@ -152,7 +159,7 @@ namespace OpenLib.VsWizards
         //---------------------------------------------------------------------
 
         /// <summary>
-        /// Adds a Visual Studio project to a solution folder using the
+        /// Moves a Visual Studio project to a solution folder using the
         /// specified wizard data and to an overriden physical folder on the
         /// file system.
         /// </summary>
@@ -162,25 +169,25 @@ namespace OpenLib.VsWizards
         /// template wizard.</param>
         /// <param name="templatePath">The path to the Visual Studio project
         /// template.</param>
-        /// <param name="defaultDestinationPath">The default destination path
-        /// of the Visual Studio project to be created.</param>
-        /// <param name="nameSpace">The namespace for the Visual Studio project
-        /// to be created.</param>
-        private void AddProject(DirectoryInfo solutionRoot,
-                                Dictionary<string, string> wizardData,
-                                string templatePath,
-                                string defaultDestinationPath,
-                                string nameSpace)
+        /// <param name="projectPath">The path of the Visual Studio project
+        /// that was created.</param>
+        /// <param name="projectName">The name of the Visual Studio project
+        /// that was created.</param>
+        private void MoveProject(DirectoryInfo solutionRoot,
+                                 Dictionary<string, string> wizardData,
+                                 string templatePath,
+                                 string projectPath,
+                                 string projectName)
         {
             var dte = this.VsUtils.GetActiveInstance();
             var solution = dte.Solution;
 
-            DirectoryInfo destination = new DirectoryInfo(
-                this.StripSolutionPath(defaultDestinationPath, solutionRoot.Name));
+            DirectoryInfo projectRoot = new DirectoryInfo(
+                this.GetNewProjectPath(solutionRoot.FullName, wizardData[WizardDataKeyCustomProjectDir], projectName));
 
-            if (!destination.Exists)
+            if (!projectRoot.Exists)
             {
-                Project project = this.VsUtils.FindProject(nameSpace);
+                Project project = this.VsUtils.FindProject(projectName);
                 Project folder = this.VsUtils.FindSolutionFolder(wizardData[WizardDataKeySolutionFolder]);
 
                 solution.Remove(project);
@@ -188,38 +195,35 @@ namespace OpenLib.VsWizards
                 if (folder != null)
                 {
                     SolutionFolder solutionFolder = this.VsUtils.ConvertToSolutionFolder(folder);
-
+                    
                     solutionFolder.AddFromTemplate(
                         templatePath,
-                        destination.FullName,
-                        nameSpace);
+                        projectRoot.FullName,
+                        projectName);
+                    
+                    this.IoUtils.DeleteDirectory(projectPath);
                 }
             }
         }
 
         /// <summary>
-        /// Strips an extra directory out of the specified solution path to
-        /// override the default Visual Studio project folder's location on the
-        /// file system.
+        /// Gets the absolute path for a Visual Studio project using the
+        /// specified solution path, path to the current location of
+        /// the project, and a custom relative directory path to a new
+        /// location for the project based on solution path root.
         /// </summary>
-        /// <param name="currentPath">The current path to the Visual Studio
-        /// solution.</param>
-        /// <param name="solutionDir">The name of the Visual Studio solution
-        /// directory.</param>
-        /// <returns>The updated solution path with the extra directory stripped
-        /// out.</returns>
-        private string StripSolutionPath(string currentPath, string solutionDir)
+        /// <param name="solutionPath">The absolute path of the Visual Studio
+        /// solution directory.</param>
+        /// <param name="customProjectDir">The relative path of the optional
+        /// custom project directory.</param>
+        /// <param name="projectName">The sbsolute current path to the Visual
+        /// Studio project.</param>
+        /// <returns>The new absolute path to the project.</returns>
+        private string GetNewProjectPath(string solutionPath,
+                                         string customProjectDir,
+                                         string projectName)
         {
-            string path = currentPath;
-            IEnumerable<int> enumerable = path.IndexOfAll(solutionDir);
-
-            if (enumerable.Count() == 3)
-            {
-                int index = enumerable.ElementAt(1);
-                path = path.Remove(index, solutionDir.Length);
-            }
-
-            return path;
+            return Path.Combine(solutionPath, customProjectDir, projectName);
         }
     }
 }

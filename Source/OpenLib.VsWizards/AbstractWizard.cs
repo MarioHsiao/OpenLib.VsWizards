@@ -58,6 +58,11 @@ namespace OpenLib.VsWizards
         public IVsUtils VsUtils { get; internal set; }
 
         /// <summary>
+        /// Gets a reference to the I/O utilities.
+        /// </summary>
+        public IIoUtils IoUtils { get; internal set; }
+
+        /// <summary>
         /// Gets directory information for the Visual Studio solution root.
         /// </summary>
         public DirectoryInfo SolutionRoot { get; internal set; }
@@ -79,9 +84,9 @@ namespace OpenLib.VsWizards
         public string DefaultDestinationPath { get; internal set; }
 
         /// <summary>
-        /// Gets the namespace for the Visual Studio project to be created.
+        /// Gets the name for the Visual Studio project to be created.
         /// </summary>
-        public string NameSpace { get; internal set; }
+        public string ProjectName { get; internal set; }
 
         /// <summary>
         /// Gets a value indicating if the project template is valid.
@@ -98,6 +103,7 @@ namespace OpenLib.VsWizards
         protected AbstractWizard()
         {
             this.VsUtils = new VsUtils(new Vs2015CsInfo());
+            this.IoUtils = new IoUtils();
         }
 
         //---------------------------------------------------------------------
@@ -135,11 +141,9 @@ namespace OpenLib.VsWizards
         {
             this.SolutionRoot = new DirectoryInfo(replacementsDictionary[VarSolutionDir]);
             this.WizardData = this.GetWizardData(replacementsDictionary);
-
             this.TemplatePath = customParams[0].ToString();
             this.DefaultDestinationPath = replacementsDictionary[VarDestinationDir];
-            this.NameSpace = replacementsDictionary[VarSafeProjectName];
-
+            this.ProjectName = replacementsDictionary[VarSafeProjectName];
             this.IsValid = this.Validate();
         }
 

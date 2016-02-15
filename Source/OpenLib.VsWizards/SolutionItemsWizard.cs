@@ -129,7 +129,10 @@ namespace OpenLib.VsWizards
                                    WizardRunKind runKind,
                                    object[] customParams)
         {
-            base.RunStarted(automationObject, replacementsDictionary, runKind, customParams);
+            base.RunStarted(automationObject,
+                            replacementsDictionary,
+                            runKind,
+                            customParams);
 
             this.TemplatePath = Path.GetDirectoryName(
                 Path.GetDirectoryName(this.TemplatePath));
