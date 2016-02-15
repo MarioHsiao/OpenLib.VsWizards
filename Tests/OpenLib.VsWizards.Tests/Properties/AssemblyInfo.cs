@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Chris Jaehnen (CJ)")]
 [assembly: AssemblyProduct("OpenLib.VsWizards.Tests")]
-[assembly: AssemblyCopyright("Copyright © CJ 2014")]
+[assembly: AssemblyCopyright("Copyright © CJ 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: CLSCompliant(true)]

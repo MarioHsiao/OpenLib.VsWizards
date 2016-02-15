@@ -97,7 +97,7 @@ namespace OpenLib.VsWizards
         /// </summary>
         protected AbstractWizard()
         {
-            this.VsUtils = new VsUtils(new Vs2013CsInfo());
+            this.VsUtils = new VsUtils(new Vs2015CsInfo());
         }
 
         //---------------------------------------------------------------------
